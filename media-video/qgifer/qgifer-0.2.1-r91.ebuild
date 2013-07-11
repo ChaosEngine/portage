@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils cmake-utils
+inherit cmake-utils
 
 DESCRIPTION="QGifer"
 HOMEPAGE="https://sourceforge.net/projects/qgifer/"
@@ -24,14 +24,6 @@ DEPEND="${RDEPEND}
 
 S=${WORKDIR}/${P}-source/
 
-src_configure() {
-	cmake-utils_src_configure
-}
-
-src_compile() {
-    cmake-utils_src_compile
-}
-
-src_install() {
-	cmake-utils_src_install
+src_prepare() {
+	epatch "${FILESDIR}/${P}_desktop.patch"
 }
