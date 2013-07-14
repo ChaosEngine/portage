@@ -2,13 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit cmake-utils
 
 DESCRIPTION="QGifer"
 HOMEPAGE="https://sourceforge.net/projects/qgifer/"
-#SRC_URI="http://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.zip"
 SRC_URI="mirror://sourceforge/${PN}/${P}-source.tar.gz"
 
 LICENSE="GPL-3"
