@@ -6,12 +6,10 @@
 		<name>Andrzej Pauli</name>
 		<description>Maintainer.  Assign bugs to him.</description>
 	</maintainer>
-	<maintainer>
-		<email>aidecoe@gentoo.org</email>
-		<name>Amadeusz Żołnowski</name>
-		<description>Proxy maintainer.  CC him on bugs.</description>
-	</maintainer>
 	<longdescription lang="en">
 		QGifer is a tool for extracting part of a video to an animated GIF file.
 	</longdescription>
+	<use>
+		<flag name='imagemagick'>Use imagemagick for image operations</flag>
+	</use>
 </pkgmetadata>

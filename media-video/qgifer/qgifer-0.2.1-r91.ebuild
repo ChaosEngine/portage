@@ -1,28 +1,39 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/media-video/qgifer/qgifer-0.2.1.ebuild,v 1.2 2013/07/14 11:58:58 tomwij Exp $
 
-EAPI=5
+EAPI="5"
 
 inherit cmake-utils
 
-DESCRIPTION="QGifer"
+DESCRIPTION="A video-based animated GIF creator."
 HOMEPAGE="https://sourceforge.net/projects/qgifer/"
 SRC_URI="mirror://sourceforge/${PN}/${P}-source.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
-IUSE=""
+KEYWORDS="~amd64 ~x86"
 
-RDEPEND="media-libs/giflib
+IUSE="debug imagemagick"
+
+RDEPEND="media-libs/giflib:0
 	dev-qt/qtcore:4
-	media-libs/opencv"
+	dev-qt/qtgui:4
+	imagemagick? ( media-gfx/imagemagick:0 )
+	media-libs/opencv:0[ffmpeg]
+	virtual/ffmpeg:0"
+
 DEPEND="${RDEPEND}
-	>=dev-util/cmake-2.8"
+	>=dev-util/cmake-2.8:0"
 
-S=${WORKDIR}/${P}-source/
+S="${WORKDIR}/${P}-source"
 
-src_prepare() {
-	epatch "${FILESDIR}/${P}_desktop.patch"
+PATCHES=( "${FILESDIR}"/${P}-desktop.patch )
+
+src_configure() {
+	local mycmakeargs=""
+
+	use debug && mycmakeargs+=" -DRELEASE_MODE=OFF"
+
+	cmake-utils_src_configure
 }
