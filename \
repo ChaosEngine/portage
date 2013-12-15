@@ -1,0 +1,17 @@
+added boinc-7.2.33.ebuild
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   sci-misc/boinc/ChangeLog
+#	new file:   sci-misc/boinc/Manifest
+#	new file:   sci-misc/boinc/boinc-7.2.33.ebuild
+#	new file:   sci-misc/boinc/files/boinc-7.2.0-fix_subdirs.patch
+#	new file:   sci-misc/boinc/files/boinc.conf
+#	new file:   sci-misc/boinc/files/boinc.init
+#	new file:   sci-misc/boinc/files/generate_tarball.sh
+#	new file:   sci-misc/boinc/metadata.xml
+#
