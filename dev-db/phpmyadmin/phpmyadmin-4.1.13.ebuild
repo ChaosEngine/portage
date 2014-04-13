@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-db/phpmyadmin/phpmyadmin-4.0.0.ebuild,v 1.8 2013/04/26 09:20:22 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-db/phpmyadmin/phpmyadmin-4.1.13.ebuild,v 1.8 2014/02/14 09:20:22 ago Exp $
 
 EAPI="4"
 
@@ -14,7 +14,7 @@ HOMEPAGE="http://www.phpmyadmin.net/"
 SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.xz"
 
 LICENSE="GPL-2"
-KEYWORDS="~ialpha ~iamd64 ~ihppa ~ia64 ~ippc ~ippc64 ~isparc ~ix86 ~x86-fbsd ~ppc-macos ~x64-macos ~x86-macos"
+KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~ppc-macos ~x64-macos ~x86-macos"
 IUSE="setup"
 
 RDEPEND="
