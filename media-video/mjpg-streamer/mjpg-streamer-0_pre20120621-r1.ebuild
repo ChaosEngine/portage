@@ -8,8 +8,7 @@ inherit eutils
 
 DESCRIPTION="MJPG-streamer takes JPGs from Linux-UVC compatible webcams"
 HOMEPAGE="http://sourceforge.net/projects/mjpg-streamer"
-#SRC_URI="http://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.tar.bz2"
-SRC_URI="https://github.com/ChaosEngine/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="http://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -41,26 +40,26 @@ src_prepare() {
 		use ${flag} && switch='' || switch='#'
 		sed -i \
 			-e "s|^#*PLUGINS +\?= ${flag}.so|${switch}PLUGINS += ${flag}.so|" \
-			${PN}/Makefile
+			Makefile
 	done
 }
 
 src_compile() {
 	local v4l=$(use v4l && use input_uvc && echo 'USE_LIBV4L2=true')
-	cd "${PN}" && emake ${v4l}
+	emake ${v4l}
 }
 
 src_install() {
 	into /usr
-	dobin ${PN}/${PN//-/_}
-	dolib.so ${PN}/*.so
+	dobin ${PN//-/_}
+	dolib.so *.so
 
 	if use www ; then
 		insinto /usr/share/${PN}
-		doins -r ${PN}/www
+		doins -r www
 	fi
 
-	dodoc ${PN}/README ${PN}/TODO
+	dodoc README TODO
 
 	newinitd "${FILESDIR}"/${PN}.initd ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
