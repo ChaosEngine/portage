@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -14,14 +14,13 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE="debug imagemagick opencv2 opencv3"
-REQUIRED_USE="|| ( opencv2 opencv3 )"
+IUSE="debug imagemagick opencv3"
 
 RDEPEND="media-libs/giflib:0
 	dev-qt/qtcore:4
 	dev-qt/qtgui:4
 	imagemagick? ( media-gfx/imagemagick:0 )
-	opencv2? ( >=media-libs/opencv-2.4.9[ffmpeg] <media-libs/opencv-3.0.0[ffmpeg] )
+	!opencv3? ( >=media-libs/opencv-2.4.9[ffmpeg] <media-libs/opencv-3.0.0[ffmpeg] )
 	opencv3? ( >=media-libs/opencv-3.0.0[ffmpeg] )
 	virtual/ffmpeg:0"
 

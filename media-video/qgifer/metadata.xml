@@ -11,7 +11,6 @@
 	</longdescription>
 	<use>
 		<flag name='imagemagick'>Use imagemagick for image operations</flag>
-		<flag name='opencv2'>Use opencv-2.* for video operations</flag>
-		<flag name='opencv3'>Use opencv-3.* for video operations</flag>
+		<flag name='opencv3'>Use opencv-3.* for video operations instead opencv-2.*</flag>
 	</use>
 </pkgmetadata>
