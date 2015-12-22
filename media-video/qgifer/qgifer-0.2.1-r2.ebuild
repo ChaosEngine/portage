@@ -20,8 +20,8 @@ RDEPEND="media-libs/giflib:0
 	dev-qt/qtcore:4
 	dev-qt/qtgui:4
 	imagemagick? ( media-gfx/imagemagick:0 )
-	!opencv3? ( >=media-libs/opencv-2.4.9[ffmpeg] <media-libs/opencv-3.0.0[ffmpeg] )
-	opencv3? ( >=media-libs/opencv-3.0.0[ffmpeg] )
+	!opencv3? ( media-libs/opencv:0/2.4[ffmpeg] )
+	opencv3? ( media-libs/opencv:0/3.0[ffmpeg] )
 	virtual/ffmpeg:0"
 
 DEPEND="${RDEPEND}
