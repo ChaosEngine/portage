@@ -1,39 +1,39 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-misc/ajaxterm/Attic/ajaxterm-0.10.ebuild,v 1.5 2012/04/06 19:31:40 pacho dead $
 
-EAPI="3"
-PYTHON_DEPEND="2"
+EAPI=6
+PYTHON_COMPAT=( python2_7 )
 
-inherit python
+inherit python-single-r1
 
 MY_P="Ajaxterm-${PV}"
 
 DESCRIPTION="Ajaxterm is a web based terminal"
 HOMEPAGE="http://antony.lesuisse.org/qweb/trac/wiki/AjaxTerm"
-SRC_URI="http://antony.lesuisse.org/qweb/files/${MY_P}.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ajaxterm/0.10-12ubuntu1/ajaxterm_${PV}.orig.tar.gz"
 
 LICENSE="public-domain LGPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~sparc ~x86"
-IUSE=""
 
-DEPEND=""
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 RDEPEND=""
+DEPEND=""
 
 S="${WORKDIR}/${MY_P}"
 
 pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
+	python-single-r1_pkg_setup
 }
 
 src_prepare() {
-	python_convert_shebangs -r 2 .
-
 	# baselayout's start-stop-daemon wrapper does not allow shell scripts
 	sed -i -e "s: -- :\0/usr/share/ajaxterm/ajaxterm.py :" \
-		-e "s:\(DAEMON=%(bin)s/\)ajaxterm:\1python:" configure.initd.gentoo
+		-e "s:\(DAEMON=%(bin)s/\)ajaxterm:\1python:" \
+		-e "s:\#\!/sbin/runscript:\#\!/sbin/openrc-run:" \
+		configure.initd.gentoo
+
+	eapply_user
 }
 
 src_configure() {
