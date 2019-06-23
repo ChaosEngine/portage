@@ -7,17 +7,19 @@ EAPI=4
 inherit eutils
 
 DESCRIPTION="MJPG-streamer takes JPGs from Linux-UVC compatible webcams"
-HOMEPAGE="http://sourceforge.net/projects/mjpg-streamer"
-SRC_URI="http://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.tar.bz2"
+HOMEPAGE="https://sourceforge.net/projects/mjpg-streamer"
+SRC_URI="https://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
 
-INPUT_PLUGINS="input_testpicture input_control input_file input_uvc "
+INPUT_PLUGINS="input_testpicture input_control input_file input_uvc"
 OUTPUT_PLUGINS="output_file output_udp output_http output_autofocus output_rtsp"
 IUSE_PLUGINS="${INPUT_PLUGINS} ${OUTPUT_PLUGINS}"
-IUSE="${IUSE_PLUGINS} www v4l"
+IUSE="input_testpicture input_control +input_file input_uvc output_file
+	output_udp +output_http output_autofocus output_rtsp
+	www v4l"
 REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
 	|| ( ${OUTPUT_PLUGINS} )
 	v4l? ( input_uvc )"
@@ -29,6 +31,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${PV}-make-var-instead-of-cmd.patch"
+	epatch "${FILESDIR}/${PV}-to-work-with-kernel-4.19.patch"
 
 	local flag switch
 
