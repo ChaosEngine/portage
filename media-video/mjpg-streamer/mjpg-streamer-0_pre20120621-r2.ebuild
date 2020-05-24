@@ -1,8 +1,7 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mjpg-streamer/mjpg-streamer-0_pre20120421.ebuild,v 1.1 2012/04/23 10:00:59 aidecoe Exp $
 
-EAPI=4
+EAPI=7
 
 inherit eutils
 
@@ -12,31 +11,36 @@ SRC_URI="https://dev.gentoo.org/~aidecoe/distfiles/${CATEGORY}/${PN}/${P}.tar.bz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~amd64 ~x86"
 
-INPUT_PLUGINS="input_testpicture input_control input_file input_uvc"
-OUTPUT_PLUGINS="output_file output_udp output_http output_autofocus output_rtsp"
+INPUT_PLUGINS="input-testpicture input-control input-file input-uvc"
+OUTPUT_PLUGINS="output-file output-udp output-http output-autofocus output-rtsp"
 IUSE_PLUGINS="${INPUT_PLUGINS} ${OUTPUT_PLUGINS}"
-IUSE="input_testpicture input_control +input_file input_uvc output_file
-	output_udp +output_http output_autofocus output_rtsp
-	www v4l"
+IUSE="input-testpicture input-control +input-file input-uvc output-file
+	output-udp +output-http output-autofocus output-rtsp
+	www"
 REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
-	|| ( ${OUTPUT_PLUGINS} )
-	v4l? ( input_uvc )"
+	|| ( ${OUTPUT_PLUGINS} )"
 
 RDEPEND="virtual/jpeg
-	v4l? ( input_uvc? ( media-libs/libv4l ) )"
+	input-uvc? ( media-libs/libv4l )"
 DEPEND="${RDEPEND}
-	input_testpicture? ( media-gfx/imagemagick )"
+	input-testpicture? ( media-gfx/imagemagick )"
+
+PATCHES=(
+	"${FILESDIR}/make-var-instead-of-cmd.patch"
+	"${FILESDIR}/to-work-with-kernel-3.18.patch"
+)
 
 src_prepare() {
-	epatch "${FILESDIR}/${PV}-make-var-instead-of-cmd.patch"
-	epatch "${FILESDIR}/${PV}-to-work-with-kernel-4.19.patch"
+	default
 
 	local flag switch
 
 	for flag in ${IUSE_PLUGINS}; do
 		use ${flag} && switch='' || switch='#'
+		flag=${flag/input-/input_}
+		flag=${flag/output-/output_}
 		sed -i \
 			-e "s|^#*PLUGINS +\?= ${flag}.so|${switch}PLUGINS += ${flag}.so|" \
 			Makefile
@@ -44,13 +48,14 @@ src_prepare() {
 }
 
 src_compile() {
-	local v4l=$(use v4l && use input_uvc && echo 'USE_LIBV4L2=true')
+	local v4l=$(use input-uvc && echo 'USE_LIBV4L2=true')
 	emake ${v4l}
 }
 
 src_install() {
 	into /usr
 	dobin ${PN//-/_}
+	into "/usr/$(get_libdir)/${PN}"
 	dolib.so *.so
 
 	if use www ; then
@@ -60,7 +65,7 @@ src_install() {
 
 	dodoc README TODO
 
-	newinitd "${FILESDIR}"/${PN}.initd ${PN}
+	sed -e "s|@LIBDIR@|$(get_libdir)/${PN}/$(get_libdir)|g" "${FILESDIR}/${PN}.initd" | newinitd - ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
 }
 
