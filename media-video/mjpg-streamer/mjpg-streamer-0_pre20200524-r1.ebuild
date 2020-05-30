@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit eutils
+inherit eutils systemd
 
 DESCRIPTION="MJPG-streamer takes JPGs from Linux-UVC compatible webcams"
 HOMEPAGE="https://github.com/jacksonliam/mjpg-streamer"
@@ -73,6 +73,7 @@ src_install() {
 
 	sed -e "s|@LIBDIR@|$(get_libdir)/${PN}/$(get_libdir)|g" "${FILESDIR}/${PN}.initd" | newinitd - ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
+	systemd_dounit mjpg_streamer@.service
 }
 
 pkg_postinst() {
