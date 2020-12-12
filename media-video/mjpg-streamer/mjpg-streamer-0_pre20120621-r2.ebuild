@@ -55,7 +55,6 @@ src_compile() {
 src_install() {
 	into /usr
 	dobin ${PN//-/_}
-	into "/usr/$(get_libdir)/${PN}"
 	dolib.so *.so
 
 	if use www ; then
@@ -65,7 +64,7 @@ src_install() {
 
 	dodoc README TODO
 
-	sed -e "s|@LIBDIR@|$(get_libdir)/${PN}/$(get_libdir)|g" "${FILESDIR}/${PN}.initd" | newinitd - ${PN}
+	sed -e "s|@LIBDIR@|$(get_libdir)|g" "${FILESDIR}/${PN}.initd" | newinitd - ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
 }
 

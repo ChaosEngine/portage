@@ -5,10 +5,6 @@
 		<email>andrzej.pauli@gmail.com</email>
 		<name>Andrzej Pauli</name>
 	</maintainer>
-	<maintainer type="person">
-		<email>aidecoe@gentoo.org</email>
-		<name>Amadeusz Żołnowski</name>
-	</maintainer>
 	<maintainer type="project">
 		<email>proxy-maint@gentoo.org</email>
 		<name>Proxy Maintainers</name>
@@ -29,7 +25,6 @@
 		<flag name="input-uvc">Plugin that sends video stream from UVC
 			compatible camera</flag>
 		<flag name="input-http">Plugin that takes http-input</flag>
-		<flag name="input-opencv">Plugin that processes video  withj OpenCV</flag>
 		<flag name="input-ptp2">Plugin that sends video stream from PTP2 compatible camera</flag>
 		<flag name="output-file">Plugin that saves received content under given
 			location</flag>

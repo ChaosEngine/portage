@@ -1,22 +1,23 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-inherit eutils systemd
+inherit systemd
 
 DESCRIPTION="MJPG-streamer takes JPGs from Linux-UVC compatible webcams"
 HOMEPAGE="https://github.com/jacksonliam/mjpg-streamer"
-SRC_URI="https://haos.hopto.org/Stuff/${CATEGORY}/${P}.tar.bz2"
+EGIT_COMMIT="85f89a8c321e799fabb1693c5d133f3fb48ee748"
+SRC_URI="https://github.com/jacksonliam/${PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~arm64 ~x86"
 
-INPUT_PLUGINS="input-testpicture input-control input-file input-uvc input-http input-opencv input-ptp2"
+INPUT_PLUGINS="input-testpicture input-control input-file input-uvc input-http input-ptp2"
 OUTPUT_PLUGINS="output-file output-udp output-http output-autofocus output-rtsp output-viewer output-zmqserver"
 IUSE_PLUGINS="${INPUT_PLUGINS} ${OUTPUT_PLUGINS}"
-IUSE="input-testpicture input-control +input-file input-uvc input-http input-opencv input-ptp2
+IUSE="input-testpicture input-control +input-file input-uvc input-http input-ptp2
 	output-file	output-udp +output-http output-autofocus output-rtsp output-viewer output-zmqserver
 	www http-management wxp-compat"
 REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
@@ -24,18 +25,23 @@ REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
 
 RDEPEND="virtual/jpeg
 	input-uvc? ( media-libs/libv4l )
-	input-opencv? ( media-libs/opencv )
-	output-zmqserver? ( dev-libs/protobuf-c net-libs/zeromq )
-	input-ptp2? ( media-libs/libgphoto2 )"
+	input-ptp2? ( media-libs/libgphoto2 )
+	output-zmqserver? (
+		dev-libs/protobuf-c
+		net-libs/zeromq
+	)"
 DEPEND="${RDEPEND}
 	input-testpicture? ( media-gfx/imagemagick )"
 
-S="${WORKDIR}/mjpg-streamer-experimental"
+S="${WORKDIR}/${PN}-${EGIT_COMMIT}/${PN}-experimental"
 
 src_prepare() {
-	sed -i -e "s|.*RPATH.*||g" CMakeLists.txt
-	use wxp-compat && sed -i -e \
-		's|^add_feature_option(WXP_COMPAT "Enable compatibility with WebcamXP" OFF)|add_feature_option(WXP_COMPAT "Enable compatibility with WebcamXP" ON)|g' CMakeLists.txt
+	sed -i -e "s|.*RPATH.*||g" CMakeLists.txt || die
+	if use wxp-compat; then
+		sed -i -e \
+			's|^add_feature_option(WXP_COMPAT "Enable compatibility with WebcamXP" OFF)|add_feature_option(WXP_COMPAT "Enable compatibility with WebcamXP" ON)|g' \
+			CMakeLists.txt || die
+	fi
 
 	local flag switch
 	for flag in ${IUSE_PLUGINS}; do
@@ -44,19 +50,17 @@ src_prepare() {
 		flag=${flag/output-/output_}
 		sed -i -e \
 			"s|^add_subdirectory(plugins\/${flag})|${switch}add_subdirectory(plugins/${flag})|" \
-			CMakeLists.txt
+			CMakeLists.txt || die
 	done
-	use http-management && sed -i -e \
-		's|^add_feature_option(ENABLE_HTTP_MANAGEMENT "Enable experimental HTTP management option" OFF)|add_feature_option(ENABLE_HTTP_MANAGEMENT "Enable experimental HTTP management option" ON)|g' plugins/output_http/CMakeLists.txt
+	if use http-management; then
+		sed -i -e \
+		's|^add_feature_option(ENABLE_HTTP_MANAGEMENT "Enable experimental HTTP management option" OFF)|add_feature_option(ENABLE_HTTP_MANAGEMENT "Enable experimental HTTP management option" ON)|g' \
+		plugins/output_http/CMakeLists.txt || die
+	fi
+	sed -e "s|@LIBDIR@|$(get_libdir)/${PN}/$(get_libdir)|g" "${FILESDIR}/${PN}.initd" > ${PN}.initd || die
 
 	default
 }
-
-#src_compile() {
-#	local v4l=$(use input-uvc && echo 'USE_LIBV4L2=true')
-#	local management=$(use http-management && echo 'ENABLE_HTTP_MANAGEMENT=true')
-#	emake ${v4l} ${management}
-#}
 
 src_install() {
 	into /usr
@@ -71,7 +75,7 @@ src_install() {
 
 	dodoc README.md TODO
 
-	sed -e "s|@LIBDIR@|$(get_libdir)/${PN}/$(get_libdir)|g" "${FILESDIR}/${PN}.initd" | newinitd - ${PN}
+	newinitd ${PN}.initd ${PN}
 	newconfd "${FILESDIR}"/${PN}.confd ${PN}
 	systemd_dounit mjpg_streamer@.service
 }
