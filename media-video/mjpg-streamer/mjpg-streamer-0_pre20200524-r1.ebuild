@@ -24,7 +24,7 @@ REQUIRED_USE="|| ( ${INPUT_PLUGINS} )
 	|| ( ${OUTPUT_PLUGINS} )"
 
 RDEPEND="virtual/jpeg
-	input-uvc? ( media-libs/libv4l )
+	input-uvc? ( media-libs/libv4l acct-group/video )
 	input-ptp2? ( media-libs/libgphoto2 )
 	output-zmqserver? (
 		dev-libs/protobuf-c
@@ -81,11 +81,17 @@ src_install() {
 }
 
 pkg_postinst() {
+	einfo
 	elog "Remember to set an input and output plugin for mjpg-streamer."
 
+	if use input-uvc ; then
+		elog "To use the UVC plugin as a regular user, you must be a part of the video group"
+	fi
+
 	if use www ; then
-		echo
+		einfo
 		elog "An example webinterface has been installed into"
 		elog "/usr/share/mjpg-streamer/www for your usage."
 	fi
+	einfo
 }
